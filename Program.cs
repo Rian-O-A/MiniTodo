@@ -14,8 +14,25 @@ app.MapGet("v1/todos", (AppDbCotenxt cotenxt) =>
 {
     // var todo = new Todo(Guid.NewGuid(), "Ir a academia", false);
     var todos = cotenxt.Todos.ToList();
+ 
     return Results.Ok(todos);
 }).Produces<Todo>();
+
+
+app.MapGet("v1/todos/{id}", (AppDbCotenxt context, Guid id) =>
+{
+    // Agora, o parâmetro 'id' será capturado da URL
+    var todo = context.Todos.FirstOrDefault(t => t.Id == id);
+
+    if (todo == null)
+    {
+        return Results.NotFound();
+    }
+
+    return Results.Ok(todo);
+
+}).Produces<Todo>();
+
 
 app.MapPost("v1/todos", (
     AppDbCotenxt context,
